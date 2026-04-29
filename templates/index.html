@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animal Classifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <div class="window">
+
+    <!-- Title bar -->
+    <div class="title-bar">
+      <div class="title-left">
+        <div class="app-icon">📷</div>
+        <div class="app-title">Animal<br>Classifier</div>
+      </div>
+      <div class="title-close">- x</div>
+    </div>
+
+    <!-- Main content -->
+    <div class="window-content">
+
+      <!-- Left panel -->
+      <div class="left-panel">
+        <button class="btn-load" onclick="document.getElementById('fileInput').click()">Load Image</button>
+        <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" style="display:none">
+
+        <button class="btn-classify" id="classifyBtn" onclick="classify()" disabled>Classify</button>
+
+        <div class="results-label">Results:</div>
+        <div class="result-box" id="resultBox"></div>
+      </div>
+
+      <!-- Right panel -->
+      <div class="right-panel">
+        <div class="preview-label">Image preview:</div>
+        <div class="image-area">
+          <img id="preview" src="" alt="preview">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Progress bars -->
+    <div class="bars-section" id="barsSection"></div>
+
+  </div>
+
+  <script>
+    // Translation map (Polish class names → English display names)
+    const LABELS = {
+      'kon':   'Horse',
+      'kot':   'Cat',
+      'krowa': 'Cow',
+      'kura':  'Chicken',
+      'pies':  'Dog'
+    };
+
+    // Confidence threshold below which we show "no animal detected"
+    const THRESHOLD = 40;
+
+    // Class names passed from Flask
+    const classNames = {{ class_names | tojson }};
+
+    // Build empty bars on page load
+    function initBars() {
+      const section = document.getElementById('barsSection');
+      section.innerHTML = '';
+      classNames.forEach(name => {
+        const label = LABELS[name] || name;
+        section.innerHTML += `
+          <div class="bar-row">
+            <div class="bar-track"><div class="bar-fill" id="bar-${name}" style="width:0%"></div></div>
+            <div class="bar-pct" id="pct-${name}">0%</div>
+            <div class="bar-name">${label}</div>
+          </div>`;
+      });
+    }
+
+    // Load image preview
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById('preview');
+        img.src = e.target.result;
+        img.classList.add('visible');
+        document.getElementById('classifyBtn').disabled = false;
+        document.getElementById('resultBox').innerHTML = '';
+        resetBars();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function resetBars() {
+      classNames.forEach(name => {
+        const bar = document.getElementById('bar-' + name);
+        const pct = document.getElementById('pct-' + name);
+        if (bar) bar.style.width = '0%';
+        if (pct) pct.textContent = '0%';
+      });
+    }
+
+    function classify() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return;
+
+      const btn = document.getElementById('classifyBtn');
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/predict', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.textContent = 'Classify';
+
+          // Update bars
+          data.results.forEach(r => {
+            const bar = document.getElementById('bar-' + r.animal);
+            const pct = document.getElementById('pct-' + r.animal);
+            if (bar) bar.style.width = r.probability + '%';
+            if (pct) pct.textContent = r.probability + '%';
+          });
+
+          // Update result box
+          const top = data.results[0];
+          const box = document.getElementById('resultBox');
+          if (top.probability < THRESHOLD) {
+            box.innerHTML = '<div class="result-none">no animal<br>detected</div>';
+          } else {
+            const label = LABELS[top.animal] || top.animal;
+            box.innerHTML = `
+              <div class="result-animal">${label}</div>
+              <div class="result-confidence">confidence: ${top.probability}%</div>`;
+          }
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.textContent = 'Classify';
+          alert('Error during classification.');
+        });
+    }
+
+    initBars();
+  </script>
+
+</body>
+</html>

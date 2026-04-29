@@ -1,0 +1,220 @@
+/* ── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── App background ────────────────────────────────── */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #8880C8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Window card ───────────────────────────────────── */
+.window {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  width: 520px;
+  overflow: hidden;
+}
+
+/* ── Title bar ─────────────────────────────────────── */
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid #e8e4f4;
+}
+
+.title-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.app-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #1a1a1a;
+}
+
+.title-close {
+  font-size: 13px;
+  color: #666;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── Main content (two panels) ─────────────────────── */
+.window-content {
+  display: flex;
+  gap: 0;
+  padding: 16px 16px 12px;
+}
+
+/* ── Left panel ────────────────────────────────────── */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.btn-load {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1.5px solid #333;
+  border-radius: 999px;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+.btn-load:hover { background: #f0eef8; }
+
+.btn-classify {
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+.btn-classify:hover { background: #333; }
+.btn-classify:disabled { background: #999; cursor: not-allowed; }
+
+.results-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 4px;
+}
+
+.result-box {
+  flex: 1;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  min-height: 100px;
+  text-align: center;
+}
+
+.result-animal {
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.result-confidence {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.result-none {
+  font-size: 14px;
+  font-weight: 700;
+  color: #888;
+  text-transform: lowercase;
+}
+
+/* ── Right panel ───────────────────────────────────── */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 16px;
+}
+
+.preview-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.image-area {
+  flex: 1;
+  background: #d8d4e8;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.image-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.image-area img.visible { display: block; }
+
+/* ── Bars section ──────────────────────────────────── */
+.bars-section {
+  padding: 4px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 14px;
+  background: #e8e4f4;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #8880C8;
+  border-radius: 999px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.bar-pct {
+  font-size: 11px;
+  font-weight: 600;
+  color: #444;
+  width: 36px;
+  text-align: right;
+}
+
+.bar-name {
+  font-size: 12px;
+  color: #333;
+  width: 58px;
+}
