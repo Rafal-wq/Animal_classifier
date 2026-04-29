@@ -1,9 +1,10 @@
+import os
 import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras import layers, models
-import pathlib
 
-DATASET_DIR = 'dataset'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_DIR = os.path.join(BASE_DIR, 'dataset')
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 8
 EPOCHS = 10
@@ -29,7 +30,7 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
 class_names = train_ds.class_names
 print(f'Klasy: {class_names}')
 
-with open('class_names.txt', 'w') as f:
+with open(os.path.join(BASE_DIR, 'class_names.txt'), 'w') as f:
     f.write('\n'.join(class_names))
 
 AUTOTUNE = tf.data.AUTOTUNE
@@ -58,5 +59,5 @@ model.summary()
 
 history = model.fit(train_ds, validation_data=val_ds, epochs=EPOCHS)
 
-model.save('animal_model.h5')
+model.save(os.path.join(BASE_DIR, 'animal_model.h5'))
 print('Model zapisany jako animal_model.h5')

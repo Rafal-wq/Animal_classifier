@@ -7,9 +7,11 @@ import os
 
 app = Flask(__name__)
 
-model = tf.keras.models.load_model('animal_model.h5')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-with open('class_names.txt') as f:
+model = tf.keras.models.load_model(os.path.join(BASE_DIR, 'animal_model.h5'))
+
+with open(os.path.join(BASE_DIR, 'class_names.txt')) as f:
     class_names = [line.strip() for line in f.readlines()]
 
 IMG_SIZE = (224, 224)
