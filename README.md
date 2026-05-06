@@ -88,6 +88,47 @@ Po zakończeniu treningu w folderze projektu pojawi się plik `animal_model.h5`.
 
 ---
 
+## Testowanie modelu
+
+Testowanie modelu odbywa się na osobnym zbiorze danych (`dataset_test`), który nie był używany podczas trenowania. Skrypt testowy wczytuje zapisany model i oblicza podstawowe metryki (accuracy, precision, recall, F1-score) oraz generuje macierz pomyłek.
+
+### ▶️ Uruchomienie
+
+1. Zainstaluj wymagane zależności:
+
+   ```
+   pip install -r requirements-dev.txt
+   ```
+
+2. Pobierz zbiór testowy z linku:
+   https://drive.google.com/drive/folders/140KwezR4kzm5BmLjFHGN2GlSHhmLoxX3
+
+3. Umieść folder `dataset_test` w katalogu projektu (na tym samym poziomie co `test.py`).
+
+4. Uruchom testy:
+
+   ```
+   python test.py
+   ```
+
+### ℹ️ Informacje
+
+* Model ładowany jest z pliku `.h5`
+* Dane testowe powinny być uporządkowane w podfolderach odpowiadających klasom
+* Wyniki testów wyświetlane są w konsoli oraz zapisywane jako wykresy
+
+### 📊 Wyniki
+
+Po uruchomieniu skryptu otrzymasz:
+
+* średni i całkowity czas predykcji danych testowych
+* dokładność modelu (accuracy)
+* raport klasyfikacji
+* macierz pomyłek (confusion matrix)
+
+
+---
+
 ## Uruchomienie aplikacji desktopowej
 
 **macOS / Linux:**

@@ -1,4 +1,5 @@
 import os
+import time
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -33,8 +34,21 @@ test_ds = tf.keras.utils.image_dataset_from_directory(
 y_true = np.concatenate([y for x, y in test_ds], axis=0)
 
 # predictions
+start = time.perf_counter() * 1000
+
 preds = model.predict(test_ds)
+
+end = time.perf_counter() * 1000
+
 y_pred = np.argmax(preds, axis=1)
+
+# avg time
+num_images = len(y_true)
+total_time = end - start
+avg_time = total_time / num_images
+print("\nPREDICTION TIME (ms):")
+print("TOTAL:", round(total_time, 2))
+print("AVG per image:", round(avg_time, 2))
 
 # accuracy
 accuracy = np.mean(y_pred == y_true)
